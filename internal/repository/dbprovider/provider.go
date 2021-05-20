@@ -12,29 +12,25 @@ import (
 )
 
 const (
-	DatabaseName           = "discountdb"
+	// DatabaseName           = "discountdb"
 	UsersCollectionName    = "user"
 	ProductsCollectionName = "Product"
 )
 
-type DBProvider interface {
+type DB interface {
 	GetUser(id string) error
 }
 
-type dbProvider struct {
+type DBProvider struct {
 	DB *mongo.Database
 }
 
-func NewDBProvider() (*dbProvider, error) {
-	p := new(dbProvider)
+func NewDBProvider() (*DBProvider, error) {
+	p := new(DBProvider)
 
 	mongoUsername := os.Getenv("MONGO_USERNAME")
 	mongoPassword := os.Getenv("MONGO_PASSWORD")
 	mongoDb := os.Getenv("MONGO_DB")
-
-	log.Print(mongoUsername)
-	log.Print(mongoPassword)
-	log.Print(mongoDb)
 
 	// create the mongo context
 	mongoCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -49,12 +45,12 @@ func NewDBProvider() (*dbProvider, error) {
 		log.Fatalf("Error Starting MongoDB Client: %v", err)
 	}
 
-	p.DB = client.Database(DatabaseName)
+	p.DB = client.Database(mongoDb)
 
 	return p, nil
 }
 
-func (ref *dbProvider) GetUser(id string) error {
+func (ref *DBProvider) GetUser(id string) error {
 	c := ref.DB.Collection(UsersCollectionName)
 	log.Print(c)
 

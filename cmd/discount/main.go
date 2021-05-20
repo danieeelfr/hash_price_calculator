@@ -14,7 +14,7 @@ func main() {
 		log.Panic(e)
 	}
 	// u := db.GetUser("1")
-	print(u)
+	print(db)
 
 	s, e := srv.NewGRPCServer()
 	if e != nil {

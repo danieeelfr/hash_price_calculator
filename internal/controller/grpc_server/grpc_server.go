@@ -1,6 +1,7 @@
 package grpc_server
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -33,7 +34,7 @@ func (ref *server) Start() error {
 	opts := []grpc.ServerOption{}
 	s := grpc.NewServer(opts...)
 
-	discountpb.RegisterDiscountServiceServer(s, &ref)
+	discountpb.RegisterDiscountServiceServer(s, &server{})
 
 	// start a GO Routine
 	go func() {
@@ -55,4 +56,37 @@ func (ref *server) Start() error {
 	l.Close()
 	fmt.Println("All done!")
 	return nil
+}
+
+func (ref *server) GetDiscount(ctx context.Context, req *discountpb.DiscountRequest) (*discountpb.DiscountResponse, error) {
+
+	log.Println(fmt.Sprintf("Received user_id=%s, product_id=%s", req.UserId, req.ProductId))
+
+	return &discountpb.DiscountResponse{
+		Discount: 50.50,
+	}, nil
+	// data := personItem{
+	// 	Name:        person.GetName(),
+	// 	Email:       person.GetEmail(),
+	// 	Phones:      person.GetPhones(),
+	// 	LastUpdated: timestamppb.Now(),
+	// }
+	// res, err := collection.InsertOne(context.Background(), data)
+	// if err != nil {
+	// 	return nil, status.Errorf(codes.Internal, fmt.Sprintf(" Internal Error: %v", err))
+	// }
+	// oid, ok := res.InsertedID.(primitive.ObjectID)
+	// if !ok {
+	// 	return nil, status.Errorf(codes.Internal, "Cannot convert to OID")
+	// }
+	// data.ID = oid
+	// return &phonebookpb.PersonResponse{
+	// 	Person: &phonebookpb.Person{
+	// 		Id:          data.ID.Hex(),
+	// 		Name:        data.Name,
+	// 		Email:       data.Email,
+	// 		Phones:      data.Phones,
+	// 		LastUpdated: data.LastUpdated,
+	// 	},
+	// }, nil
 }

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-protoc ./discount.proto --go_out=plugins=grpc:.
+protoc ./discountpb/discount.proto --go_out=plugins=grpc:.
