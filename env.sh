@@ -1,3 +1,0 @@
-MONGO_USERNAME=user
-MONGO_PASSWORD=pwd
-MONGO_DB=discountdb
